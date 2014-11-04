@@ -1,6 +1,6 @@
 
 #Get into right directory
-#cd ./Desktop/Python/Raw
+cd ./Desktop/Python/Raw
 
 #get into ipython
 ipython --pylab
@@ -156,6 +156,356 @@ tips.pivot_table(['tip_pct', 'size'], rows=['sex', 'day'], cols = 'smoker')
 tips.pivot_table(['tip_pct', 'size'], rows=['sex', 'day'], cols = 'smoker', margins = True)
 #'count' or len gives me count or frequency and fill_value puts 0 in empty or Na areas
 tips.pivot_table(['tip_pct'], rows=['sex', 'smoker'], cols = 'day', aggfunc = len, margins = True, fill_value = 0)
+
+
+
+#####################
+####### Scrapy ######
+#####################
+#Start Here: http://doc.scrapy.org/en/latest/intro/tutorial.html
+#Check Version of Python. Must be Python 2.7 or later
+python --Version
+
+#Get lxml
+pip install lxml
+
+#get help
+pip help
+
+#List items pip has installed
+pip list
+
+#Show hidden folders
+ls -a
+
+#See available commands
+scrpay -h
+
+#Open file in terminal (http://hints.macworld.com/article.php?story=2004012218171997)
+#open __file__
+open pip.log
+
+#Open file in a certain directory, here under Documents
+subl ~/Documents/mySite
+
+#Download Scrapy
+sudo easy_install Scrapy
+
+#Know present working directory
+pwd
+
+#Failed Project
+#Create project
+scrapy startproject cbase
+
+#Created file in Desktop/Gdrive/ACode/Python/WebCrawl
+touch cbase_spider.py
+
+#& Copy/Paste following code inside of it
+import scrapy
+
+class CbaseSpider(scrapy.Spider):
+    name = "cbase"
+    allowed_domains = ["crunchbase.com"]
+    start_urls = [
+        "http://info.crunchbase.com/about/crunchbase-data-exports/"
+    ]
+
+    def parse(self, response):
+        filename = response.url.split("/")[-2]
+        with open(filename, 'wb') as f:
+            f.write(response.body)ls
+
+#Then, go to top level directory and run:
+sudo easy_install service_identity
+
+#Then run code below. This creates 2 new files that are the webpages asked for.
+scrapy crawl cbase
+
+#Now, I need to 'Select' certain parts w/in the page. I need to choose 'Selectors'
+#Start a shell - go to top level directory and run:
+scrapy shell "http://info.crunchbase.com/about/crunchbase-data-exports/"
+
+#Extracting Data
+#Select each <li> element beloning to the sites list
+sel.xpath('//ul/li')
+
+#Get sites descriptions
+sel.xpath('//ul/li/text()').extract()
+
+#Get sites titles:
+sel.xpath('//ul/li/a/text()').extract()
+
+#Get site Links
+sel.xpath('//ul/li/a/@href').extract()
+
+#Now crawling the dmoz.org domain again and you’ll see sites being printed in your output
+scrapy crawl cbase
+
+#With this in your dmoz_spider.py, you can 'scrapy crawl dmoz'and get json stuff.
+import scrapy
+
+from cbase.items import CbaseItem
+
+class CbaseSpider(scrapy.Spider):
+    name = "cbase"
+    allowed_domains = ["crunchbase.com"]
+    start_urls = [
+        "http://info.crunchbase.com/about/crunchbase-data-exports/"
+    ]
+
+    def parse(self, response):
+        for sel in response.xpath('//ul/li'):
+            item = CbaseItem()
+            item['title'] = sel.xpath('a/text()').extract()
+            item['link'] = sel.xpath('a/@href').extract()
+            item['desc'] = sel.xpath('text()').extract()
+            yield item
+
+
+#Store the JSON info into items.json
+scrapy crawl cbase -o items.json
+
+##List all the spiders
+scrapy list
+
+#Fetch a website
+#Cuz, I'm not specifying which area is being downloaded, it doesn't collect here:
+scrapy fetch --nolog http://info.crunchbase.com/about/crunchbase-data-exports/
+
+#Cuz I specify what to get, it gives me stuff:
+scrapy fetch --nolog --headers http://info.crunchbase.com/about/crunchbase-data-exports/
+
+#View URL in browser
+scrapy view http://info.crunchbase.com/about/crunchbase-data-exports/
+
+
+################
+################
+##### END OF ###
+##### CRAWLER ##
+################
+
+####GET DATA####
+#With R
+#Get in right directory
+setwd("/Users/jonathanberthet/Desktop/GDrive/ACode/Python/Cbase")
+
+#Determine wd
+getwd()
+
+#See what's inside directory
+list.files()
+
+#Download Data from Website
+fileUrl <- "http://static.crunchbase.com/exports/crunchbase_monthly_export.xlsx?accessType=DOWNLOAD"
+
+#Put data in directory on computer as a csv
+download.file(fileUrl,destfile="/Users/jonathanberthet/Desktop/GDrive/ACode/Python/Cbase/cbase8_14.csv",method="curl")
+#Or xls
+download.file(fileUrl,destfile="/Users/jonathanberthet/Desktop/GDrive/ACode/Python/Cbase/cbase8_14.xls",method="curl")
+
+#Read certain Tab / doesn't work
+cData <- read.xlsx2("./Cbase/cbase8_14.xlsx",sheetIndex=4)
+
+#Find Download Date
+dateDownloaded <- date()
+dateDownloaded
+
+#Read the csv file
+df = read.csv("/cbase814.csv")
+
+#Now that file is in csv format, then open with pandas
+
+
+
+#PYTHON
+ #Go into pylab
+ipython --pylab	
+
+#Define numpy, pandas, and matplotlib
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#Know Current WD in Python
+import os
+os.getcwd()
+
+#See what's in cwd
+x = os.listdir('/Users/jonathanberthet/Desktop/GDrive/ACode/Python/Cbase')
+
+#Print out in readable way
+for i in x:
+	print i
+
+#Save csv worksheet tabs into different worksheets
+>>> import pylab
+>>> from openpyxl import load_workbook
+>>> import codecs
+>>> import os
+>>> dest_filename = 'cbase814.xlsx'
+>>> wb = load_workbook(filename = dest_filename, use_iterators = True)
+>>> worksheetNames=wb.get_sheet_names()
+>>> worksheetNames
+#Find name of certain worksheet
+>>> worksheetNames[1:2]
+>>> ws = wb['Investments']
+>>> ws
+<Worksheet "Investments">
+>>> for row in ws.iter_rows():
+...     for cell in row:
+...             val = cell.value
+...             print val
+
+import pylab
+from openpyxl import load_workbook
+import codecs
+import os
+
+created_date = '20140730'
+basedir = '/Users/jonathanberthet/Desktop/GDrive/ACode/Python/Cbase/'
+outputFilenameBase = "/tmp/" + 'crunchbase_monthly_export'
+
+username='root'
+password='admin'
+host    ='localhost'
+database='crunch'
+
+dest_filename = 'cbase814.xlsx'
+
+wb = load_workbook(filename = dest_filename, use_iterators = True)
+
+worksheetNames=wb.get_sheet_names()
+
+#worksheetNames=['Companies']
+
+foCommand = codecs.open(outputFilenameBase + "_" + created_date + ".cmd", "w", "utf-8")
+
+for worksheetName in worksheetNames:
+    if worksheetName in ['Analysis', 'License', 'Additions']:
+        continue
+    worksheetName 
+    outputFilename= "_" + worksheetName + "_" + created_date
+    fo = codecs.open(outputFilenameBase + outputFilename + ".csv", "w", "utf-8")
+    ws = wb[worksheetName]
+    columnTypes = []
+    columnNames = []
+    line = 1
+    try:
+        for row in ws.iter_rows(): # it brings a new method: iter_rows()
+            colIndex=0
+            outputLine = []
+            if line==100000:
+                break
+            for cell in row:
+                val = cell.value
+                if line == 1 :
+                    columnNames.append(val)
+                try:
+                    columnType=columnTypes[colIndex]
+                except IndexError:
+                    columnTypes.append([])
+                    columnType=columnTypes[colIndex]
+                                    
+                valType =val.__class__.__name__
+                if valType != 'NoneType':
+                    if not valType in columnType:
+                        columnType.append(valType)
+                colIndex=colIndex+1
+                    
+                if val is None:
+                    val = ''
+                if isinstance(val, basestring):
+                    val = val            
+                else:                 
+                    val = str( val)
+                outputLine.append( '"' + val + '"')
+            try:
+                fo.write( '|'.join(outputLine))
+                fo.write( "\n")
+            except UnicodeDecodeError:
+                print outputLine
+                break    
+            line=line+1
+    except:
+        print "ERROR : ", worksheetName
+    fo.close()
+
+
+
+#Open with Investment Worksheet (http://java.dzone.com/articles/reading-excel-spreadsheets) 
+#or (http://www.youlikeprogramming.com/2012/03/examples-reading-excel-xls-documents-using-pythons-xlrd/)
+#http://www.simplistix.co.uk/presentations/python-excel.pdf
+
+import workbook = xlrd.open_workbook('cbase8_14.xls')
+
+#Get list of sheet names
+print workbook.sheet_names()
+
+#Grab specific worksheet
+worksheet = workbook.sheet_by_name('Investments')
+
+#Or Grab by Index
+wbook = workbook.sheet_by_index(4)
+
+
+
+
+
+#Get in right directory
+cd /Users/jonathanberthet/Desktop/GDrive/ACode/Python/Cbase
+
+#Read Each of the Files, separate by thousands, and separate info from '|' to different columns.
+#Rounds
+df.r = pd.read_csv('crunchbase_monthly_export_Rounds_20140730.csv', thousands = ',', error_bad_lines = False, sep = '|')
+#Acquisitions
+df.a = pd.read_csv('crunchbase_monthly_export_Acquisitions_20140730.csv', thousands = ',', error_bad_lines = False, sep = '|')
+#Companies
+df.c = pd.read_csv('crunchbase_monthly_export_Companies_20140730.csv', thousands = ',', error_bad_lines = False, sep = '|')
+#Investments
+df.i = pd.read_csv('crunchbase_monthly_export_Investments_20140730.csv', thousands = ',', error_bad_lines = False, sep = '|')
+ 
+#Read top 5 rows of data
+df.r.head()
+
+#Round Questions
+***1. How many companies received what stage rounds of fundraising each year?
+
+#Rename columns I need: 
+df.r = df.r.rename(columns={'company_category_code' : 'catCode', ' raised_amount_usd ' : 'rAmount', 'funded_year' : 'fundYear', 'company_country_code' : 'coCountry',  ' company_category_list' : 'coCatList'})
+
+#Need company, year, Rount
+
+
+2. What industries have had the most fundraising rounds per country?
+3. Rank the top 5 funded industries per year?
+
+#Investment Questions
+1. What have been the top 10 investors' top 5 investments per year?
+
+
+***2. How many companies received what stage rounds of fundraising each year?
+
+#Rename columns I need: 
+df.i = df.i.rename(columns={'company_market' : 'catMarket', 'raised_amount_usd' : 'rAmount', 'funded_year' : 'fundYear', 'company_country_code' : 'coCountry',  'company_category_list' : 'coCatList', 'funding_round_type' : 'fundType'})
+
+#Organize each catCode by their year (first, organizes by fund yr. Second, organizes by catCode)
+for (k1, k2), group in df.i.groupby(['fundYear', 'catMarket']):
+	print k1, k2
+	print group
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
